@@ -65,9 +65,9 @@ func test_input(delta: float) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func handle_input(stick: Vector2, trig: float, delta: float) -> void:
-	if stick.length() > 0.85:
-		stick = stick.normalized()*0.85
-	stick /= 0.85
+	if stick.length() > 0.95:
+		stick = stick.normalized()*0.95
+	stick /= 0.95
 	if stick.length() > REMEMBER_THRESHOLD:
 		var lerp_amnt := 1 - pow(0.00001, delta)
 		remembered_stick = remembered_stick.lerp(stick.normalized(), lerp_amnt)
@@ -81,7 +81,8 @@ func handle_input(stick: Vector2, trig: float, delta: float) -> void:
 func motor_towards_position(from: ArmPosition, to: ArmPosition, delta: float) -> void:
 	var direction := arm_polar_direction(from, to)
 	var dist := arm_distance(from, to)
-	var mult: float = MOTOR_VELOCITY * sin((min(dist, MOTOR_DAMP_DISTANCE) / MOTOR_DAMP_DISTANCE)*PI/2.0)
+	var base_mult: float = min(dist, MOTOR_DAMP_DISTANCE) / MOTOR_DAMP_DISTANCE
+	var mult: float = MOTOR_VELOCITY * pow(base_mult, 1.0) #pow(sin(base_mult*PI/2.0), 2.0)
 	$ConeJoint.swing_motor_target_velocity_z = direction.x * mult * delta
 	$ConeJoint.swing_motor_target_velocity_y = -direction.y * mult * delta
 

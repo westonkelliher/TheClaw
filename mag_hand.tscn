@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://ed84ffwla8ye"]
+[gd_scene load_steps=7 format=3 uid="uid://ed84ffwla8ye"]
 
 [ext_resource type="Script" path="res://mag_hand.gd" id="1_5y70y"]
 [ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://arm2.tres" id="2_shdd7"]
@@ -14,7 +14,11 @@ height = 0.1
 radius = 0.25
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_jst58"]
+height = 4.0
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_j18p5"]
 height = 1.0
+radius = 0.25
 
 [node name="MagHand" type="RigidBody3D"]
 collision_layer = 4
@@ -34,8 +38,12 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="Shape" type="CollisionShape3D" parent="DetectionArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.524304, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
 shape = SubResource("CylinderShape3D_jst58")
+
+[node name="Shape2" type="CollisionShape3D" parent="DetectionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("CylinderShape3D_j18p5")
 
 [node name="Target" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)

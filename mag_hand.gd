@@ -3,24 +3,25 @@ extends RigidBody3D
 @export var BASE_FORCE := 30.0 # when dist == 1
 
 var bodies: Array[RigidBody3D] = []
-var is_on := false
+var attraction := 0.0
 
 
 func _physics_process(delta: float) -> void:
-	if is_on:
+	if attraction != 0.0:
 		attract_bodies(delta)
 
-func set_on_off(on: bool) -> void:
-	is_on = on
+func set_attraction(a: float) -> void:
+	attraction = a*abs(a)
 
 func attract_bodies(delta: float) -> void:
 	for b: RigidBody3D in bodies:
 		var to_body := b.global_position - global_position
 		var toward_body := to_body.normalized()
 		var dist := to_body.length()
-		var mult := pow(1/(dist+0.03), 2.5)
+		var pow := 2.1 + attraction
+		var mult := pow(1/(dist+0.03), pow)
 		mult *= abs((global_basis.inverse() * toward_body).dot(Vector3.UP))
-		var force := toward_body * pow(1/(dist+0.03), 2.0) * BASE_FORCE
+		var force := toward_body * pow(1/(dist+0.03), 2.0) * BASE_FORCE * attraction
 		#print(force)
 		b.apply_force(-force)
 		apply_force(force)

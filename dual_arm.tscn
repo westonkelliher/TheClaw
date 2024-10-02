@@ -23,10 +23,10 @@ height = 2.4
 
 [node name="DualArm" type="Node3D"]
 script = ExtResource("1_lqich")
-MAX_ANGLE_FROM_STICK = 30.0
-MAX_ANGLE_FROM_TRIG = 30.0
+MAX_ANGLE_FROM_STICK = 80.0
+MAX_ANGLE_FROM_TRIG = 3.0
 LENGTH = 2.2
-MOTOR_VELOCITY = 80.0
+MOTOR_DAMP_DISTANCE = 0.5
 
 [node name="Arm" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -54,15 +54,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 
 [node name="ForeArm" parent="Arm" instance=ExtResource("2_ijob3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
-MAX_ANGLE_FROM_STICK = 70.0
 LENGTH = 1.3
-MOTOR_VELOCITY = 180.0
-MOTOR_DAMP_DISTANCE = 0.5
+MOTOR_VELOCITY = 200.0
 attached_to = NodePath("..")
 
 [node name="MagHand" parent="Arm/ForeArm" instance=ExtResource("3_8kj4o")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26503, 0)
-gravity_scale = 0.0
+gravity_scale = 1.0
 
 [node name="StapleJoint" type="JoltGeneric6DOFJoint3D" parent="Arm/ForeArm"]
 node_b = NodePath("../MagHand")

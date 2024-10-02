@@ -1,10 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://d15lf4w3qfrdu"]
+[gd_scene load_steps=7 format=3 uid="uid://d15lf4w3qfrdu"]
 
 [ext_resource type="Script" path="res://arm.gd" id="1_d2cf2"]
 [ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://arm2.tres" id="2_xyuiv"]
 [ext_resource type="Material" uid="uid://dnr0kcbgo3mjy" path="res://arm.tres" id="3_ash7t"]
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_w5n0v"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_fryko"]
 material = ExtResource("2_xyuiv")
@@ -21,13 +19,15 @@ radius = 0.1
 
 [node name="Arm" type="Node3D"]
 script = ExtResource("1_d2cf2")
+MAX_ANGLE_FROM_STICK = 160.0
+MAX_ANGLE_FROM_TRIG = 10.0
+MOTOR_DAMP_DISTANCE = 1.0
 
 [node name="Arm" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 collision_layer = 4
 collision_mask = 3
 mass = 4.0
-physics_material_override = SubResource("PhysicsMaterial_w5n0v")
 linear_damp = 45.0
 
 [node name="Fins" type="MeshInstance3D" parent="Arm"]
