@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://c67qniiml4s6b"]
+
+[ext_resource type="Script" path="res://world.gd" id="1_beaqy"]
+[ext_resource type="PackedScene" uid="uid://c6v2atq3umgbj" path="res://arm_segment.tscn" id="2_ih65k"]
+[ext_resource type="PackedScene" uid="uid://mkq5dsq34ovi" path="res://box.tscn" id="2_smprg"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qp8o8"]
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_vs7q4"]
+size = Vector3(10, 0.1, 10)
+
+[node name="World" type="Node3D"]
+script = ExtResource("1_beaqy")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.953328, 0.301938, 0, -0.301938, 0.953328, 0, 3, 4.5)
+fov = 60.0
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.0612372, 0.05, -0.0612372, -0.0353553, 0.0866025, 0.0353553, 0.0707107, -1.49012e-09, 0.0707107, -6, 3, 5)
+light_color = Color(1, 0.847059, 0.698039, 1)
+light_energy = 10.0
+shadow_enabled = true
+spot_range = 17.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.996184, -0.0314224, 0.0814247, -0.0872774, -0.358656, 0.929381, 0, -0.932941, -0.360029, 0, 25, 0)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_qp8o8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("BoxMesh_vs7q4")
+
+[node name="Box_other" parent="." instance=ExtResource("2_smprg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00818574, 0.423612, -0.0211742)
+
+[node name="ArmSegment" parent="Box_other" instance=ExtResource("2_ih65k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00818574, 0.969378, 0.0211742)
+attached_to = NodePath("..")
+
+[node name="Boxes" type="Node3D" parent="."]
+
+[node name="Box_a" parent="Boxes" instance=ExtResource("2_smprg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.21121, 0.886924, 0.989978)
+
+[node name="Box_b" parent="Boxes/Box_a" instance=ExtResource("2_smprg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.473179, -0.463312, -0.453035)
+
+[node name="ConeTwistJoint3D" type="JoltConeTwistJoint3D" parent="Boxes/Box_a/Box_b"]
+swing_limit_enabled = true
+swing_limit_span = 0.523599
+twist_limit_enabled = true
+node_a = NodePath("../..")
+node_b = NodePath("..")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.240815, 0.180325, 0.201777)

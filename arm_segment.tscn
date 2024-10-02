@@ -1,0 +1,49 @@
+[gd_scene load_steps=5 format=3 uid="uid://c6v2atq3umgbj"]
+
+[ext_resource type="Script" path="res://arm_segment.gd" id="1_bki1k"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_vqg6s"]
+top_radius = 0.05
+bottom_radius = 0.06
+height = 0.5
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mlqbf"]
+radius = 0.1
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_kmynl"]
+radius = 0.1
+
+[node name="ArmSegment" type="RigidBody3D"]
+transform = Transform3D(0.866025, 0.5, 0, -0.5, 0.866025, 0, 0, 0, 1, 0, 0, 0)
+collision_layer = 4
+collision_mask = 3
+mass = 4.0
+gravity_scale = 0.0
+script = ExtResource("1_bki1k")
+
+[node name="ConeJoint" type="JoltConeTwistJoint3D" parent="."]
+swing_limit_enabled = true
+swing_limit_span = 1.22173
+twist_limit_enabled = true
+swing_motor_enabled = true
+node_b = NodePath("..")
+exclude_nodes_from_collision = false
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.9, 0)
+
+[node name="Fins" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.2, 0, 0, 0, 2.5, 0, 0, 0, 0.5, 0, -0.2, 0)
+mesh = SubResource("CylinderMesh_vqg6s")
+
+[node name="Fins2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-9.61651e-08, 0, 0.5, 0, 2.5, 0, -2.2, 0, -2.18557e-08, 0, -0.2, 0)
+mesh = SubResource("CylinderMesh_vqg6s")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_mlqbf")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_kmynl")
+skeleton = NodePath("")
+
+[node name="End" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
