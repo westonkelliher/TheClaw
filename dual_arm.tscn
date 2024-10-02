@@ -1,50 +1,67 @@
-[gd_scene load_steps=6 format=3 uid="uid://doayccyb8kihk"]
+[gd_scene load_steps=6 format=3 uid="uid://bqbmla5yony8f"]
 
-[ext_resource type="PackedScene" uid="uid://c6v2atq3umgbj" path="res://arm_segment.tscn" id="1_12s0p"]
-[ext_resource type="Script" path="res://dual_arm.gd" id="1_eeyr3"]
+[ext_resource type="Script" path="res://dual_arm.gd" id="1_lqich"]
+[ext_resource type="PackedScene" uid="uid://d15lf4w3qfrdu" path="res://arm.tscn" id="2_ijob3"]
 
-[sub_resource type="CylinderMesh" id="CylinderMesh_lx177"]
+[sub_resource type="CylinderMesh" id="CylinderMesh_j4gw2"]
 top_radius = 0.05
 bottom_radius = 0.06
 height = 0.5
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_el2wp"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2h623"]
 radius = 0.1
+height = 2.4
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_qk4hf"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pr40u"]
 radius = 0.1
+height = 2.4
 
-[node name="DualArm" type="RigidBody3D"]
+[node name="DualArm" type="Node3D"]
+script = ExtResource("1_lqich")
+MAX_ANGLE_FROM_STICK = 30.0
+MAX_ANGLE_FROM_TRIG = 30.0
+LENGTH = 2.2
+MOTOR_VELOCITY = 80.0
+
+[node name="Arm" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 4
-collision_mask = 3
-script = ExtResource("1_eeyr3")
+collision_mask = 2
+mass = 4.0
+
+[node name="Fins" type="MeshInstance3D" parent="Arm"]
+transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 0.5, 0, -0.2, 0)
+mesh = SubResource("CylinderMesh_j4gw2")
+
+[node name="Fins2" type="MeshInstance3D" parent="Arm"]
+transform = Transform3D(-9.61651e-08, 0, 0.5, 0, 2.2, 0, -2.2, 0, -2.18557e-08, 0, -0.2, 0)
+mesh = SubResource("CylinderMesh_j4gw2")
+
+[node name="Shape" type="CollisionShape3D" parent="Arm"]
+shape = SubResource("CapsuleShape3D_2h623")
+
+[node name="Mesh" type="MeshInstance3D" parent="Arm"]
+mesh = SubResource("CapsuleMesh_pr40u")
+skeleton = NodePath("")
+
+[node name="End" type="Marker3D" parent="Arm"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+
+[node name="ForeArm" parent="Arm" instance=ExtResource("2_ijob3")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+MAX_ANGLE_FROM_STICK = 110.0
+MAX_ANGLE_FROM_TRIG = 40.0
+LENGTH = 1.3
+MOTOR_VELOCITY = 180.0
+MOTOR_DAMP_DISTANCE = 0.5
+attached_to = NodePath("../..")
 
 [node name="ConeJoint" type="JoltConeTwistJoint3D" parent="."]
 swing_limit_enabled = true
-swing_limit_span = 3.05433
+swing_limit_span = 2.79253
 twist_limit_enabled = true
 swing_motor_enabled = true
-node_b = NodePath("..")
-transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, -0.9, 0)
-
-[node name="Fins" type="MeshInstance3D" parent="."]
-transform = Transform3D(2.2, 0, 0, 0, 2.5, 0, 0, 0, 0.5, 0, -0.2, 0)
-mesh = SubResource("CylinderMesh_lx177")
-
-[node name="Fins2" type="MeshInstance3D" parent="."]
-transform = Transform3D(-9.61651e-08, 0, 0.5, 0, 2.5, 0, -2.2, 0, -2.18557e-08, 0, -0.2, 0)
-mesh = SubResource("CylinderMesh_lx177")
-
-[node name="Shape" type="CollisionShape3D" parent="."]
-shape = SubResource("CapsuleShape3D_el2wp")
-
-[node name="Mesh" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_qk4hf")
-skeleton = NodePath("")
-
-[node name="End" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
-
-[node name="ArmSegment" parent="." instance=ExtResource("1_12s0p")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.59585, 0)
-LENGTH = 2.5
+swing_motor_max_torque = 1000.0
+node_b = NodePath("../Arm")
+exclude_nodes_from_collision = false
+transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)

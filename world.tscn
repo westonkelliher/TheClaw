@@ -1,8 +1,8 @@
 [gd_scene load_steps=6 format=3 uid="uid://c67qniiml4s6b"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_beaqy"]
-[ext_resource type="PackedScene" uid="uid://c6v2atq3umgbj" path="res://arm_segment.tscn" id="2_ih65k"]
 [ext_resource type="PackedScene" uid="uid://mkq5dsq34ovi" path="res://box.tscn" id="2_smprg"]
+[ext_resource type="PackedScene" uid="uid://bqbmla5yony8f" path="res://dual_arm.tscn" id="4_eqvty"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_qp8o8"]
 size = Vector3(10, 0.1, 10)
@@ -30,6 +30,7 @@ light_energy = 0.5
 shadow_enabled = true
 
 [node name="Floor" type="StaticBody3D" parent="."]
+collision_mask = 7
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
 shape = SubResource("BoxShape3D_qp8o8")
@@ -39,10 +40,6 @@ mesh = SubResource("BoxMesh_vs7q4")
 
 [node name="Box_other" parent="." instance=ExtResource("2_smprg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00818574, 0.423612, -0.0211742)
-
-[node name="ArmSegment" parent="Box_other" instance=ExtResource("2_ih65k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00818574, 0.969378, 0.0211742)
-attached_to = NodePath("..")
 
 [node name="Boxes" type="Node3D" parent="."]
 
@@ -59,3 +56,6 @@ twist_limit_enabled = true
 node_a = NodePath("../..")
 node_b = NodePath("..")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.240815, 0.180325, 0.201777)
+
+[node name="TestDualArm" parent="." instance=ExtResource("4_eqvty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.686144, 0, 0)
