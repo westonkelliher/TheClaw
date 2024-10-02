@@ -16,14 +16,12 @@ static func get_gamepad_input() -> GamepadInput:
 	if !InputMap.has_action("LS_down"):
 		return gpi # workaround for @tool being broken on inputs
 	#
-	print(Input.get_joy_axis(0, JOY_AXIS_TRIGGER_LEFT))
 	var L_l := Input.get_action_raw_strength("LS_left")
 	var L_r := Input.get_action_raw_strength("LS_right")
 	var L_u := Input.get_action_raw_strength("LS_up")
 	var L_d := Input.get_action_raw_strength("LS_down")
 	var L_t0 := Input.get_action_raw_strength("LT0")
 	var L_t1 := Input.get_action_raw_strength("LT1")
-	print("lt0 "+str(L_t0) + "  lt1 "+str(L_t1))
 	#
 	var R_l := Input.get_action_raw_strength("RS_left")
 	var R_r := Input.get_action_raw_strength("RS_right")

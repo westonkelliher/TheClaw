@@ -1,9 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://bqbmla5yony8f"]
+[gd_scene load_steps=9 format=3 uid="uid://bqbmla5yony8f"]
 
 [ext_resource type="Script" path="res://dual_arm.gd" id="1_lqich"]
+[ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://arm2.tres" id="2_1jnlr"]
 [ext_resource type="PackedScene" uid="uid://d15lf4w3qfrdu" path="res://arm.tscn" id="2_ijob3"]
+[ext_resource type="Material" uid="uid://dnr0kcbgo3mjy" path="res://arm.tres" id="3_0u6ed"]
+[ext_resource type="PackedScene" uid="uid://ed84ffwla8ye" path="res://mag_hand.tscn" id="3_8kj4o"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_j4gw2"]
+material = ExtResource("2_1jnlr")
 top_radius = 0.05
 bottom_radius = 0.06
 height = 0.5
@@ -13,6 +17,7 @@ radius = 0.1
 height = 2.4
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_pr40u"]
+material = ExtResource("3_0u6ed")
 radius = 0.1
 height = 2.4
 
@@ -27,7 +32,7 @@ MOTOR_VELOCITY = 80.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 4
 collision_mask = 2
-mass = 4.0
+mass = 8.0
 
 [node name="Fins" type="MeshInstance3D" parent="Arm"]
 transform = Transform3D(2.2, 0, 0, 0, 2.2, 0, 0, 0, 0.5, 0, -0.2, 0)
@@ -49,19 +54,26 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
 
 [node name="ForeArm" parent="Arm" instance=ExtResource("2_ijob3")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
-MAX_ANGLE_FROM_STICK = 110.0
-MAX_ANGLE_FROM_TRIG = 40.0
+MAX_ANGLE_FROM_STICK = 70.0
 LENGTH = 1.3
 MOTOR_VELOCITY = 180.0
 MOTOR_DAMP_DISTANCE = 0.5
-attached_to = NodePath("../..")
+attached_to = NodePath("..")
+
+[node name="MagHand" parent="Arm/ForeArm" instance=ExtResource("3_8kj4o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.26503, 0)
+gravity_scale = 0.0
+
+[node name="StapleJoint" type="JoltGeneric6DOFJoint3D" parent="Arm/ForeArm"]
+node_b = NodePath("../MagHand")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24677, 0)
 
 [node name="ConeJoint" type="JoltConeTwistJoint3D" parent="."]
 swing_limit_enabled = true
 swing_limit_span = 2.79253
 twist_limit_enabled = true
 swing_motor_enabled = true
-swing_motor_max_torque = 1000.0
+swing_motor_max_torque = 1800.0
 node_b = NodePath("../Arm")
 exclude_nodes_from_collision = false
 transform = Transform3D(-4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)

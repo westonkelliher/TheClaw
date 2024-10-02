@@ -29,20 +29,16 @@ class ArmPosition:
 @export var MOTOR_VELOCITY := 100.0 # not sure of the units
 @export var MOTOR_DAMP_DISTANCE := 0.3 # measured in radians
 
-
-
 @export var attached_to: NodePath = "":
 	set(value):
 		$ConeJoint.node_a = NodePath("../" + str(value))
+		attached_to = value
 	get:
-		return $ConeJoint.node_a
+		return attached_to
+
 
 const REMEMBER_THRESHOLD := 0.1
-
-
-
-var remembered_stick_vec := Vector2.RIGHT
-var arm_vector := Vector3.UP
+var remembered_stick := Vector2.ONE
 
 func _ready() -> void:
 	print("ready with owner: "+str(owner))
@@ -53,7 +49,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if owner == null: # scene being tested standalone
 		test_input(delta)
-	$Arm.linear_damp = 15.0
+	$Arm.linear_damp = 45.0
 
 ## Testing ##
 func add_test_camera() -> void:
@@ -69,6 +65,12 @@ func test_input(delta: float) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func handle_input(stick: Vector2, trig: float, delta: float) -> void:
+	if stick.length() > 0.85:
+		stick = stick.normalized()*0.85
+	stick /= 0.85
+	if stick.length() > REMEMBER_THRESHOLD:
+		var lerp_amnt := 1 - pow(0.00001, delta)
+		remembered_stick = remembered_stick.lerp(stick.normalized(), lerp_amnt)
 	var current := current_arm_position()
 	var targ := target_arm_position(stick, trig)
 	motor_towards_position(current, targ, delta)
@@ -104,10 +106,17 @@ func spherical_to_cartesian(r: float, theta: float, ro: float) -> Vector3:
 
 func target_arm_position(stick: Vector2, trig: float) -> ArmPosition:
 	var ap := ArmPosition.new()
+	# from stick
 	var s_ro := (PI/180.) * MAX_ANGLE_FROM_STICK * stick.length()
+	var s_theta := atan2(stick.y, stick.x)
+	# from trig
 	var t_ro := (PI/180.) * MAX_ANGLE_FROM_TRIG * trig
+	var t_theta := atan2(remembered_stick.y, remembered_stick.x)
+	# add stick and trig together
 	ap.ro = s_ro + t_ro
-	ap.theta = atan2(stick.y, stick.x)
+	if ap.ro < 0.000000001:
+		return ap
+	ap.theta = s_theta*(s_ro/ap.ro) + t_theta*(t_ro/ap.ro)
 	return ap
 
 #func local_position
