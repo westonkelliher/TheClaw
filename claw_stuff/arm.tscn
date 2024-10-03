@@ -6,28 +6,27 @@
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_fryko"]
 material = ExtResource("2_xyuiv")
-top_radius = 0.05
-bottom_radius = 0.06
+top_radius = 0.075
+bottom_radius = 0.085
 height = 0.5
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_moysq"]
-radius = 0.1
+radius = 0.15
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_84hnw"]
 material = ExtResource("3_ash7t")
-radius = 0.1
+radius = 0.15
 
 [node name="Arm" type="Node3D"]
 script = ExtResource("1_d2cf2")
 MAX_ANGLE_FROM_STICK = 160.0
 MAX_ANGLE_FROM_TRIG = 10.0
-MOTOR_DAMP_DISTANCE = 1.0
+MOTOR_DAMP_DISTANCE = 0.5
 
 [node name="Arm" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.9, 0)
 collision_layer = 4
 collision_mask = 3
-mass = 4.0
 linear_damp = 45.0
 
 [node name="Fins" type="MeshInstance3D" parent="Arm"]

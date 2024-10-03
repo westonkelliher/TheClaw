@@ -1,31 +1,38 @@
-[gd_scene load_steps=7 format=3 uid="uid://ed84ffwla8ye"]
+[gd_scene load_steps=8 format=3 uid="uid://ed84ffwla8ye"]
 
 [ext_resource type="Script" path="res://claw_stuff/mag_hand.gd" id="1_5y70y"]
 [ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://materials/arm2.tres" id="2_shdd7"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_poxsm"]
+friction = 1.5
+rough = true
+
 [sub_resource type="CylinderMesh" id="CylinderMesh_yv0bs"]
 material = ExtResource("2_shdd7")
-top_radius = 0.25
-bottom_radius = 0.23
+top_radius = 0.37
+bottom_radius = 0.35
 height = 0.1
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_t2g6r"]
 height = 0.1
-radius = 0.25
+radius = 0.37
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_jst58"]
-height = 4.0
+height = 10.0
+radius = 0.7
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_j18p5"]
 height = 1.0
-radius = 0.25
+radius = 0.4
 
 [node name="MagHand" type="RigidBody3D"]
 collision_layer = 4
 collision_mask = 3
 mass = 0.3
+physics_material_override = SubResource("PhysicsMaterial_poxsm")
 gravity_scale = 0.1
 script = ExtResource("1_5y70y")
+BASE_FORCE = 1000.0
 
 [node name="Mesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("CylinderMesh_yv0bs")
@@ -33,12 +40,27 @@ mesh = SubResource("CylinderMesh_yv0bs")
 [node name="Shape" type="CollisionShape3D" parent="."]
 shape = SubResource("CylinderShape3D_t2g6r")
 
+[node name="Shape2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0)
+shape = SubResource("CylinderShape3D_t2g6r")
+disabled = true
+
+[node name="Shape3" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.939693, -0.34202, 0, 0.34202, 0.939693, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_t2g6r")
+disabled = true
+
+[node name="Shape4" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.939693, 0.34202, 0, -0.34202, 0.939693, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_t2g6r")
+disabled = true
+
 [node name="DetectionArea" type="Area3D" parent="."]
 collision_layer = 0
 collision_mask = 2
 
 [node name="Shape" type="CollisionShape3D" parent="DetectionArea"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 6, 0)
 shape = SubResource("CylinderShape3D_jst58")
 
 [node name="Shape2" type="CollisionShape3D" parent="DetectionArea"]
@@ -46,7 +68,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 shape = SubResource("CylinderShape3D_j18p5")
 
 [node name="Target" type="Marker3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.13, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0887607, 0)
 gizmo_extents = 0.06
 
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]

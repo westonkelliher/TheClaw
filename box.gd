@@ -8,5 +8,5 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if position.length() > 10.0:
+	if position.length() > 100.0:
 		position = Vector3(-1.0, 1.0, 1.0)

@@ -41,7 +41,6 @@ const REMEMBER_THRESHOLD := 0.1
 var remembered_stick := Vector2.ONE
 
 func _ready() -> void:
-	print("ready with owner: "+str(owner))
 	if owner == null: # scene being tested standalone
 		add_test_camera()
 	pass

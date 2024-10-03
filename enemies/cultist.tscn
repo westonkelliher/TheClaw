@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://dgd81d5b3shol"]
+
+[ext_resource type="Script" path="res://enemies/cultist.gd" id="1_bhsq2"]
+[ext_resource type="Material" uid="uid://b7mpc1qhpvp3m" path="res://enemies/enemy.tres" id="1_ht2eb"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jsqjb"]
+friction = 0.5
+bounce = 0.05
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_htssd"]
+radius = 0.42
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_trq5l"]
+height = 0.5
+radius = 0.2
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_a1qc7"]
+material = ExtResource("1_ht2eb")
+radius = 0.4
+height = 1.7
+
+[sub_resource type="TorusMesh" id="TorusMesh_877x6"]
+material = ExtResource("1_ht2eb")
+inner_radius = 0.15
+outer_radius = 0.4
+
+[node name="Cultist" type="RigidBody3D"]
+collision_mask = 7
+mass = 3.0
+physics_material_override = SubResource("PhysicsMaterial_jsqjb")
+center_of_mass_mode = 1
+script = ExtResource("1_bhsq2")
+
+[node name="Shape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.284019, 0)
+shape = SubResource("CapsuleShape3D_htssd")
+
+[node name="FeetShape" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.465981, 0)
+shape = SubResource("CylinderShape3D_trq5l")
+
+[node name="Mesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.134019, 0)
+mesh = SubResource("CapsuleMesh_a1qc7")
+
+[node name="HeadMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1.13557, -0.823176, 0, 1.64635, 0.567786, -1.19209e-07, 0.87672, -0.133622)
+mesh = SubResource("TorusMesh_877x6")
+
+[node name="FootSpot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.715981, 0)
