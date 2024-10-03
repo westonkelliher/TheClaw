@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://d15lf4w3qfrdu"]
 
-[ext_resource type="Script" path="res://arm.gd" id="1_d2cf2"]
-[ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://arm2.tres" id="2_xyuiv"]
-[ext_resource type="Material" uid="uid://dnr0kcbgo3mjy" path="res://arm.tres" id="3_ash7t"]
+[ext_resource type="Script" path="res://claw_stuff/arm.gd" id="1_d2cf2"]
+[ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://materials/arm2.tres" id="2_xyuiv"]
+[ext_resource type="Material" uid="uid://dnr0kcbgo3mjy" path="res://materials/arm.tres" id="3_ash7t"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_fryko"]
 material = ExtResource("2_xyuiv")

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://ed84ffwla8ye"]
 
-[ext_resource type="Script" path="res://mag_hand.gd" id="1_5y70y"]
-[ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://arm2.tres" id="2_shdd7"]
+[ext_resource type="Script" path="res://claw_stuff/mag_hand.gd" id="1_5y70y"]
+[ext_resource type="Material" uid="uid://ctfe8wk37e8hm" path="res://materials/arm2.tres" id="2_shdd7"]
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_yv0bs"]
 material = ExtResource("2_shdd7")

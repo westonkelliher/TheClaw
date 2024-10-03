@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwb65744mhfst"]
+
+[ext_resource type="Material" uid="uid://b1w3a4b4jc1ar" path="res://materials/projectile.tres" id="1_db1c1"]
+[ext_resource type="Script" path="res://box.gd" id="1_ybijx"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_awcv0"]
+friction = 0.6
+rough = true
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_kyt3m"]
+points = PackedVector3Array(0.315, 0, 0, -0.315, 0, 0, 0, 0.315, 0, 0, -0.315, 0, 0, 0, 0.315, 0, 0, -0.315, 0.18, 0.18, 0.18, 0.18, 0.18, -0.18, 0.18, -0.18, 0.18, 0.18, -0.18, -0.18, -0.18, 0.18, 0.18, -0.18, 0.18, -0.18, -0.18, -0.18, 0.18, -0.18, -0.18, -0.18)
+
+[sub_resource type="SphereMesh" id="SphereMesh_ehvgh"]
+material = ExtResource("1_db1c1")
+radius = 0.3
+height = 0.6
+radial_segments = 8
+rings = 3
+
+[node name="Ball" type="RigidBody3D"]
+collision_layer = 2
+collision_mask = 7
+physics_material_override = SubResource("PhysicsMaterial_awcv0")
+script = ExtResource("1_ybijx")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("ConvexPolygonShape3D_kyt3m")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_ehvgh")

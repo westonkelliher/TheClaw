@@ -1,20 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://c67qniiml4s6b"]
+[gd_scene load_steps=7 format=3 uid="uid://c67qniiml4s6b"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_beaqy"]
 [ext_resource type="PackedScene" uid="uid://mkq5dsq34ovi" path="res://box.tscn" id="2_smprg"]
-[ext_resource type="PackedScene" uid="uid://bqbmla5yony8f" path="res://dual_arm.tscn" id="4_eqvty"]
+[ext_resource type="PackedScene" uid="uid://dwb65744mhfst" path="res://ball.tscn" id="3_chnsb"]
+[ext_resource type="PackedScene" uid="uid://bqbmla5yony8f" path="res://claw_stuff/dual_arm.tscn" id="4_eqvty"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_qp8o8"]
-size = Vector3(10, 0.1, 10)
+[sub_resource type="BoxShape3D" id="BoxShape3D_dkdee"]
+size = Vector3(100, 1, 100)
 
-[sub_resource type="BoxMesh" id="BoxMesh_vs7q4"]
-size = Vector3(10, 0.1, 10)
+[sub_resource type="BoxMesh" id="BoxMesh_qovug"]
+size = Vector3(100, 1, 100)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_beaqy")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.687087, 0.726575, 0, -0.726575, 0.687087, 0, 6.21978, 5.53664)
+transform = Transform3D(1, 0, 0, 0, 0.92276, 0.385375, 0, -0.385375, 0.92276, 0, 4.62217, 7.1052)
 fov = 50.0
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
@@ -30,13 +31,14 @@ light_energy = 0.5
 shadow_enabled = true
 
 [node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_mask = 7
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
-shape = SubResource("BoxShape3D_qp8o8")
+shape = SubResource("BoxShape3D_dkdee")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
-mesh = SubResource("BoxMesh_vs7q4")
+mesh = SubResource("BoxMesh_qovug")
 
 [node name="Boxes" type="Node3D" parent="."]
 
@@ -68,6 +70,11 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.885631, 0.423612, 0.595964
 
 [node name="Box_other5" parent="Boxes" instance=ExtResource("2_smprg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.885631, 0.423612, 0.595964)
+
+[node name="Ball" parent="Boxes" instance=ExtResource("3_chnsb")]
+
+[node name="Ball2" parent="Boxes" instance=ExtResource("3_chnsb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.194746, 0.426301, 1.3967)
 
 [node name="TestDualArm" parent="." instance=ExtResource("4_eqvty")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.686144, 0, 0)
