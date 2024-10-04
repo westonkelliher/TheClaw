@@ -3,6 +3,7 @@ extends RigidBody3D
 
 @export var BASE_FORCE := 400.0 # when dist == 0
 @export var HALF_LIFE := 0.025
+@export var SHOT_HALF_LIFE := 0.3
 @export var MAG_TARG_SPEED := 10.0
 # TODO: max force and halflife
 const STABLE_DISTANCE := 0.2
@@ -80,6 +81,16 @@ func push_body(body: RigidBody3D) -> void:
 func mag_distance(d: float, delta: float) -> void:
 	$Target.position.y = move_toward($Target.position.y, d, MAG_TARG_SPEED*delta)
 
+func shoot_bodies(i: float) -> void:
+	for b: RigidBody3D in bodies:
+		var to_body: Vector3 = b.global_position - $Target.global_position
+		var outward := global_basis * Vector3.UP
+		var dist := to_body.length()
+		dist = max(0.0, dist - 0.2)
+		var mult := SHOT_HALF_LIFE/(SHOT_HALF_LIFE+dist)
+		var force := outward * mult * BASE_FORCE * i *0.1
+		b.apply_impulse(-force)
+		apply_impulse(force)
 
 func _on_detection_area_body_entered(body: Node3D) -> void:
 	print(str(body) + " entered")

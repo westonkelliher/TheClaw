@@ -2,8 +2,8 @@ extends Node3D
 
 const SPAWN_HEIGHT  := 0.7
 const SEED := 102412042
-const MIN_RADIUS := 20.0
-const MAX_RADIUS := 50.0
+@export var MIN_RADIUS := 20.0
+@export var MAX_RADIUS := 50.0
 
 var N := 1
 

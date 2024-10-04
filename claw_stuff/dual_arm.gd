@@ -38,18 +38,18 @@ func _physics_process(delta: float) -> void:
 	$Arm/ForeArm.handle_input(gpi.stick_R*(1.0+disagreement*0.2), 0.0, delta)
 	extend_mag(gpi.trig_L, delta)
 	$Arm/ForeArm/MagHand.set_attraction(0)
-	if gpi.trig_R != 0.0:
+	if gpi.trig_R != 0.0 and !Input.is_action_pressed("LB"):
 		$Arm/ForeArm/MagHand.set_attraction(gpi.trig_R)
 	#if gpi.trig_L != 0.0:
 		#$Arm/ForeArm/MagHand.set_attraction(-gpi.trig_L*0.8)
-	if Input.is_action_pressed("RB"):
-		$Arm/ForeArm/MagHand.set_attraction(SHOT_POWER)
-	if Input.is_action_pressed("LB"):
-		$Arm/ForeArm/MagHand.set_attraction(-SHOT_POWER)
+	if Input.is_action_just_pressed("RB"):
+		$Arm/ForeArm/MagHand.shoot_bodies(SHOT_POWER)
+	if Input.is_action_just_pressed("LB"):
+		$Arm/ForeArm/MagHand.shoot_bodies(-SHOT_POWER)
 
 func set_cam_rotation(a: float) -> void:
 	cam_rotation = a
 
 
 func extend_mag(amount: float,delta: float) -> void:
-	$Arm/ForeArm/MagHand.mag_distance(0.1 + amount*MAG_EXTENT, delta)
+	$Arm/ForeArm/MagHand.mag_distance(0.0 + amount*MAG_EXTENT, delta)

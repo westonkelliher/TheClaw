@@ -1,7 +1,7 @@
 extends RigidBody3D
 
 
-@export var SPEED := 0.3
+@export var SPEED := 0.1
 @export var ACC := 0.3
 @export var TURN_SPEED := 0.5
 
