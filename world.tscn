@@ -1,22 +1,33 @@
-[gd_scene load_steps=8 format=3 uid="uid://c67qniiml4s6b"]
+[gd_scene load_steps=11 format=3 uid="uid://c67qniiml4s6b"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_beaqy"]
+[ext_resource type="PackedScene" uid="uid://bdcmg6byn0w7g" path="res://enemies/enemy_spawner.tscn" id="2_b5cfn"]
 [ext_resource type="PackedScene" uid="uid://mkq5dsq34ovi" path="res://box.tscn" id="2_smprg"]
 [ext_resource type="PackedScene" uid="uid://dwb65744mhfst" path="res://ball.tscn" id="3_chnsb"]
 [ext_resource type="PackedScene" uid="uid://bqbmla5yony8f" path="res://claw_stuff/dual_arm.tscn" id="4_eqvty"]
 [ext_resource type="PackedScene" uid="uid://dgd81d5b3shol" path="res://enemies/cultist.tscn" id="5_divm7"]
+[ext_resource type="PackedScene" uid="uid://btcfgvt7xq771" path="res://log.tscn" id="6_kkeuv"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_dkdee"]
 size = Vector3(100, 1, 100)
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vo7ka"]
+albedo_color = Color(0.572223, 0.82, 0.4182, 1)
+
 [sub_resource type="BoxMesh" id="BoxMesh_qovug"]
+material = SubResource("StandardMaterial3D_vo7ka")
 size = Vector3(100, 1, 100)
 
 [node name="World" type="Node3D"]
 script = ExtResource("1_beaqy")
 
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.917637, 0.397421, 0, -0.397421, 0.917637, 0, 5.76332, 9.69133)
+[node name="DualArm" parent="." instance=ExtResource("4_eqvty")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00859022, 0, 0)
+
+[node name="CamPivot" type="Node3D" parent="."]
+
+[node name="Camera3D" type="Camera3D" parent="CamPivot"]
+transform = Transform3D(1, 0, 0, 0, 0.917636, 0.397421, 0, -0.397421, 0.917636, 0, 5.76332, 9.69133)
 fov = 50.0
 
 [node name="SpotLight3D" type="SpotLight3D" parent="."]
@@ -31,6 +42,8 @@ transform = Transform3D(0.996184, -0.0314224, 0.0814247, -0.0872774, -0.358656, 
 light_energy = 0.5
 shadow_enabled = true
 
+[node name="EnemySpawner" parent="." instance=ExtResource("2_b5cfn")]
+
 [node name="Floor" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 collision_mask = 7
@@ -43,34 +56,11 @@ mesh = SubResource("BoxMesh_qovug")
 
 [node name="Boxes" type="Node3D" parent="."]
 
-[node name="Box_a" parent="Boxes" instance=ExtResource("2_smprg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.21121, 0.886924, 0.989978)
-
-[node name="Box_b" parent="Boxes/Box_a" instance=ExtResource("2_smprg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.473179, -0.463312, -0.453035)
-
-[node name="ConeTwistJoint3D" type="JoltConeTwistJoint3D" parent="Boxes/Box_a/Box_b"]
-swing_limit_enabled = true
-swing_limit_span = 0.523599
-twist_limit_enabled = true
-node_a = NodePath("../..")
-node_b = NodePath("..")
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.240815, 0.180325, 0.201777)
-
 [node name="Box_other" parent="Boxes" instance=ExtResource("2_smprg")]
 transform = Transform3D(0.849727, -0.527223, 0, 0.527223, 0.849727, 0, 0, 0, 1, -1.12485, 0.899709, -1.02632)
 
 [node name="Box_other2" parent="Boxes" instance=ExtResource("2_smprg")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.107905, 0.423612, 2.60954)
-
-[node name="Box_other3" parent="Boxes" instance=ExtResource("2_smprg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.885631, 0.423612, 0.595964)
-
-[node name="Box_other4" parent="Boxes" instance=ExtResource("2_smprg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.885631, 0.423612, 0.595964)
-
-[node name="Box_other5" parent="Boxes" instance=ExtResource("2_smprg")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.885631, 0.423612, 0.595964)
 
 [node name="Ball" parent="Boxes" instance=ExtResource("3_chnsb")]
 transform = Transform3D(0.849727, -0.527223, 0, 0.527223, 0.849727, 0, 0, 0, 1, -0.908464, 0.535438, -1.00515)
@@ -78,8 +68,8 @@ transform = Transform3D(0.849727, -0.527223, 0, 0.527223, 0.849727, 0, 0, 0, 1, 
 [node name="Ball2" parent="Boxes" instance=ExtResource("3_chnsb")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.194746, 0.426301, 1.3967)
 
-[node name="TestDualArm" parent="." instance=ExtResource("4_eqvty")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00859022, 0, 0)
+[node name="Log" parent="Boxes" instance=ExtResource("6_kkeuv")]
+transform = Transform3D(1, 0, 0, 0, 0.921978, 0.387242, 0, -0.387242, 0.921978, -2.99516, 0.644707, 0.45365)
 
 [node name="Cultist" parent="." instance=ExtResource("5_divm7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.49982, 0.329486, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.335086, 0.722197, -14.9277)

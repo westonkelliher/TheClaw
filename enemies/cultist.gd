@@ -1,8 +1,8 @@
 extends RigidBody3D
 
 
-@export var SPEED := 1.0
-@export var ACC := 0.5
+@export var SPEED := 0.3
+@export var ACC := 0.3
 @export var TURN_SPEED := 0.5
 
 var target := Vector3.ZERO
@@ -13,12 +13,12 @@ var gravity := 9.8
 func _physics_process(delta: float) -> void:
 	turn_toward_target(delta)
 	walk_forward(delta)
-	#rotation.z = move_toward(rotation.z, 0.0, pow(abs(rotation.z),2.0)*50.0*delta)
-	#rotation.x = move_toward(rotation.x, 0.0, pow(abs(rotation.x),2.0)*50.0*delta)
-	if abs(angular_velocity.y) < 2.0:
-		apply_torque(Vector3(0.0, 1.0, 0.0)*0.01)
-	if has_fallen():
-		standup()
+	if has_fallen() and $DeathTimer.is_stopped():
+		$Mesh.mesh = $Mesh.mesh.duplicate()
+		$HeadMesh.mesh = $HeadMesh.mesh.duplicate()
+		$Mesh.mesh.material = preload("res://materials/enemy_hurt.tres")
+		$HeadMesh.mesh.material = preload("res://materials/enemy_hurt.tres")
+		$DeathTimer.start()
 
 func walk_forward(delta: float) -> void:
 	var forward := (basis * Vector3.FORWARD).normalized()
@@ -30,17 +30,32 @@ func walk_forward(delta: float) -> void:
 		apply_force(2*forward*ACC)
 
 func turn_toward_target(delta: float) -> void:
+	var angle_to_target := angle_to_target()
+	apply_torque(Vector3(0.0, -angle_to_target, 0.0)*0.5)
+
+func angle_to_target() -> float:
 	var forward := (basis * Vector3.FORWARD).normalized()
+	var f_2d := Vector2(forward.x, forward.z)
 	var target_forward := (target - global_position).normalized()
-	var angle_to_target := forward.angle_to(target_forward)
-	apply_torque(Vector3(0.0, angle_to_target, 0.0)*0.5)
+	var tf_2d := Vector2(target_forward.x, target_forward.z)
+	#print(str(f_2d)+" " +str(tf_2d))
+	var angle_to_target := tf_2d.angle() - f_2d.angle()
+	if angle_to_target > PI:
+		angle_to_target -= 2*PI
+	if angle_to_target < -PI:
+		angle_to_target += 2*PI
+	return angle_to_target
 	
 
 func has_fallen() -> bool:
-	return false
+	return $FootSpot.global_position.y > 0.35
 
 func standup() -> void:
 	pass
 
 func is_standing() -> bool:
 	return abs($FootSpot.y) < 0.02
+
+
+func _on_death_timer_timeout() -> void:
+	queue_free()

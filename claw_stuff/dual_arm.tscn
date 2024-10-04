@@ -12,56 +12,65 @@ top_radius = 0.075
 bottom_radius = 0.085
 height = 0.5
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_pybvm"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_g1os2"]
 radius = 0.15
-height = 3.4
+height = 2.8
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_8bp7l"]
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_cascn"]
 material = ExtResource("3_0u6ed")
 radius = 0.15
-height = 3.4
+height = 2.8
 
 [node name="DualArm" type="Node3D"]
 script = ExtResource("1_lqich")
-MAX_ANGLE_FROM_STICK = 80.0
-MAX_ANGLE_FROM_TRIG = 3.0
-LENGTH = 3.2
-MOTOR_DAMP_DISTANCE = 0.5
+MAX_ANGLE = 75.0
+LENGTH = 2.6
+MOTOR_DAMP_DISTANCE = 0.25
+MAX_MOTOR1 = 1.2
+MAX_MOTOR2 = 2.2
+MOTOR_ACC1 = 10.0
 
 [node name="Arm" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2, 0)
 collision_layer = 4
 collision_mask = 2
 mass = 2.0
+linear_damp = 45.0
 
 [node name="Fins" type="MeshInstance3D" parent="Arm"]
-transform = Transform3D(2.2, 0, 0, 0, 3.2, 0, 0, 0, 0.5, 0, -0.2, 0)
+transform = Transform3D(2.2, 0, 0, 0, 2.6, 0, 0, 0, 0.5, 0, -0.2, 0)
 mesh = SubResource("CylinderMesh_j4gw2")
 
 [node name="Fins2" type="MeshInstance3D" parent="Arm"]
-transform = Transform3D(-9.61651e-08, 0, 0.5, 0, 3.2, 0, -2.2, 0, -2.18557e-08, 0, -0.2, 0)
+transform = Transform3D(-9.61651e-08, 0, 0.5, 0, 2.6, 0, -2.2, 0, -2.18557e-08, 0, -0.2, 0)
 mesh = SubResource("CylinderMesh_j4gw2")
 
 [node name="Shape" type="CollisionShape3D" parent="Arm"]
-shape = SubResource("CapsuleShape3D_pybvm")
+shape = SubResource("CapsuleShape3D_g1os2")
 
 [node name="Mesh" type="MeshInstance3D" parent="Arm"]
-mesh = SubResource("CapsuleMesh_8bp7l")
+mesh = SubResource("CapsuleMesh_cascn")
 skeleton = NodePath("")
 
 [node name="End" type="Marker3D" parent="Arm"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.3, 0)
 
 [node name="ForeArm" parent="Arm" instance=ExtResource("2_ijob3")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.60235, 0)
-LENGTH = 2.0
-MOTOR_VELOCITY = 200.0
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24108, 0)
+LENGTH = 1.4
+MOTOR_DAMP_DISTANCE = 0.25
+MAX_MOTOR1 = 2.2
+MAX_MOTOR2 = 3.0
+MOTOR_ACC1 = 40.0
+MOTOR_ACC2 = 5.0
 attached_to = NodePath("..")
 
 [node name="MagHand" parent="Arm/ForeArm" instance=ExtResource("3_8kj4o")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.44247, 0)
 gravity_scale = 1.0
-BASE_FORCE = 1000.0
+linear_damp = 30.0
+BASE_FORCE = 200.0
+MAG_TARG_SPEED = 2.0
 
 [node name="StapleJoint" type="JoltGeneric6DOFJoint3D" parent="Arm/ForeArm/MagHand"]
 node_a = NodePath("../../Arm")

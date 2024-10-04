@@ -6,6 +6,15 @@ class GamepadInput:
 	var stick_R := Vector2(0.0, 0.0)
 	var trig_L := 0.0
 	var trig_R := 0.0
+	
+	func rotated(a: float) -> GamepadInput:
+		var gpi := GamepadInput.new()
+		gpi.trig_L = trig_L
+		gpi.trig_R = trig_R
+		gpi.stick_L = stick_L.rotated(a)
+		gpi.stick_R = stick_R.rotated(a)
+		return gpi
+		
 
 
 #TODO: detect windows vs linux and ajust input mapping accordingly

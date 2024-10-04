@@ -1,7 +1,7 @@
 [gd_scene load_steps=8 format=3 uid="uid://dgd81d5b3shol"]
 
 [ext_resource type="Script" path="res://enemies/cultist.gd" id="1_bhsq2"]
-[ext_resource type="Material" uid="uid://b7mpc1qhpvp3m" path="res://enemies/enemy.tres" id="1_ht2eb"]
+[ext_resource type="Material" uid="uid://b7mpc1qhpvp3m" path="res://materials/enemy.tres" id="1_ht2eb"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jsqjb"]
 friction = 0.5
@@ -26,7 +26,7 @@ outer_radius = 0.4
 
 [node name="Cultist" type="RigidBody3D"]
 collision_mask = 7
-mass = 3.0
+mass = 1.5
 physics_material_override = SubResource("PhysicsMaterial_jsqjb")
 center_of_mass_mode = 1
 script = ExtResource("1_bhsq2")
@@ -49,3 +49,9 @@ mesh = SubResource("TorusMesh_877x6")
 
 [node name="FootSpot" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.715981, 0)
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]

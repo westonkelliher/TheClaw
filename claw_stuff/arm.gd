@@ -7,8 +7,7 @@ class ArmPosition:
 	var ro := 0.0
 
 
-@export var MAX_ANGLE_FROM_STICK := 60.0
-@export var MAX_ANGLE_FROM_TRIG := 70.0
+@export var MAX_ANGLE := 160.0
 @export var LENGTH := 1.8 :
 	set(value):
 		LENGTH = value
@@ -26,8 +25,14 @@ class ArmPosition:
 		return LENGTH
 
 
-@export var MOTOR_VELOCITY := 100.0 # not sure of the units
 @export var MOTOR_DAMP_DISTANCE := 0.3 # measured in radians
+
+@export var MAX_MOTOR1 := 1.0
+@export var MAX_MOTOR2 := 2.0
+@export var MOTOR_ACC1 := 5.0
+@export var MOTOR_ACC2 := 1.5
+var motor_velocity := Vector2(0.0, 0.0)
+var motor_damp_start_speed := 0.0
 
 @export var attached_to: NodePath = "":
 	set(value):
@@ -44,11 +49,12 @@ func _ready() -> void:
 	if owner == null: # scene being tested standalone
 		add_test_camera()
 	pass
+	#$Arm.linear_damp = 30.0
 
 func _physics_process(delta: float) -> void:
 	if owner == null: # scene being tested standalone
 		test_input(delta)
-	$Arm.linear_damp = 45.0
+
 
 ## Testing ##
 func add_test_camera() -> void:
@@ -80,10 +86,48 @@ func handle_input(stick: Vector2, trig: float, delta: float) -> void:
 func motor_towards_position(from: ArmPosition, to: ArmPosition, delta: float) -> void:
 	var direction := arm_polar_direction(from, to)
 	var dist := arm_distance(from, to)
-	var base_mult: float = min(dist, MOTOR_DAMP_DISTANCE) / MOTOR_DAMP_DISTANCE
-	var mult: float = MOTOR_VELOCITY * pow(base_mult, 1.0) #pow(sin(base_mult*PI/2.0), 2.0)
-	$ConeJoint.swing_motor_target_velocity_z = direction.x * mult * delta
-	$ConeJoint.swing_motor_target_velocity_y = -direction.y * mult * delta
+	accelerate_motor(direction*dist, delta)
+	apply_motor_velocity(delta)
+
+# motor_vec represents the vector to the target position
+func accelerate_motor(motor_vec: Vector2, delta: float) -> void:
+	get_motor_velocity()
+	if motor_vec.length() < MOTOR_DAMP_DISTANCE:
+		decelerate_motor(motor_vec, delta)
+		return
+	motor_damp_start_speed = -1
+	var motor_dot_speed := motor_velocity.dot(motor_vec.normalized())
+	var acc := 0.0
+	if motor_dot_speed < MAX_MOTOR1:
+		motor_velocity -= motor_velocity.normalized()*MOTOR_ACC1*delta
+		motor_velocity += 2*motor_vec.normalized()*MOTOR_ACC1*delta
+	elif motor_dot_speed < MAX_MOTOR2:
+		acc = MOTOR_ACC2
+		motor_velocity -= motor_velocity.normalized()*MOTOR_ACC2*delta
+		motor_velocity += 2*motor_vec.normalized()*MOTOR_ACC2*delta
+	else:
+		motor_velocity -= motor_velocity.normalized()*MOTOR_ACC1*delta
+		motor_velocity += motor_vec.normalized()*MOTOR_ACC1*delta
+	pass
+
+func decelerate_motor(motor_vec: Vector2, delta: float) -> void:
+	if motor_damp_start_speed == -1:
+		motor_damp_start_speed = motor_velocity.length()
+	var base_mult: float = motor_vec.length()/ MOTOR_DAMP_DISTANCE
+	motor_velocity *= pow(0.2+base_mult*0.8, delta)
+	var mult: float = pow(base_mult, 0.5)
+	var mv_target := motor_vec.normalized()*base_mult*motor_damp_start_speed
+	var acc := MOTOR_ACC1*sqrt(motor_velocity.length())
+	motor_velocity = motor_velocity.move_toward(mv_target, acc*delta)
+
+func apply_motor_velocity(delta: float) -> void:
+	$ConeJoint.swing_motor_target_velocity_z = motor_velocity.x
+	$ConeJoint.swing_motor_target_velocity_y = -motor_velocity.y
+
+func get_motor_velocity() -> void:
+	motor_velocity.x = $ConeJoint.swing_motor_target_velocity_z
+	motor_velocity.y = -$ConeJoint.swing_motor_target_velocity_y
+
 
 # from 0 to 2 (what euclidian distance would be with radius one) 
 func arm_distance(apA: ArmPosition, apB: ArmPosition) -> float:
@@ -107,10 +151,10 @@ func spherical_to_cartesian(r: float, theta: float, ro: float) -> Vector3:
 func target_arm_position(stick: Vector2, trig: float) -> ArmPosition:
 	var ap := ArmPosition.new()
 	# from stick
-	var s_ro := (PI/180.) * MAX_ANGLE_FROM_STICK * stick.length()
+	var s_ro := (PI/180.) * MAX_ANGLE * stick.length()
 	var s_theta := atan2(stick.y, stick.x)
 	# from trig
-	var t_ro := (PI/180.) * MAX_ANGLE_FROM_TRIG * trig
+	var t_ro := 0.0
 	var t_theta := atan2(remembered_stick.y, remembered_stick.x)
 	# add stick and trig together
 	ap.ro = s_ro + t_ro
